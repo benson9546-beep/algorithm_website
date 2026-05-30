@@ -147,8 +147,9 @@
             top: 18px;
             z-index: 1000;
             background-color: #ffffff;
-            transition: transform 0.25s ease;
+            transition: transform 0.25s ease, padding 0.3s ease;
         }
+        /* 當點擊連結後收合的狀態 */
         .navbar-collapsed .navbar-collapse,
         .navbar-collapsed .navbar-toggler,
         .navbar-collapsed .d-lg-flex {
@@ -157,7 +158,11 @@
         .navbar-collapsed .navbar-brand {
             margin-right: 0;
         }
-        .navbar .navbar-brand { font-weight: 800; color: #0f172a; }
+        /* 新增：在收合狀態下才顯示「顯示導覽列」按鈕 */
+        .navbar-collapsed #showNavBtn {
+            display: inline-flex !important;
+        }
+        .navbar .navbar-brand { font-weight: 800; color: #0f172a; cursor: pointer; }
         .navbar-nav { gap: 0.6rem; align-items: center; }
         .nav-link {
             color: #334155;
@@ -194,18 +199,22 @@
         </div>
     </header>
 
-    <!-- 改良後導覽列 -->
     <nav class="navbar navbar-expand-lg bg-white shadow-sm rounded-4 mb-4" aria-label="主選單">
-        <div class="container-fluid px-0">
+        <div class="container-fluid px-3">
             <a class="navbar-brand d-flex align-items-center me-3" href="#">
                 <i class="bi bi-lightning-charge-fill text-primary me-2"></i>演算法 分項
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="切換導覽">
+            
+            <button id="showNavBtn" class="btn btn-primary btn-sm ms-auto d-none align-items-center shadow-sm" type="button">
+                <i class="bi bi-list me-1"></i>顯示導覽列
+            </button>
+
+            <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="切換導覽">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse justify-content-center" id="mainNav">
-                <ul class="navbar-nav nav-pills">
+                <ul class="navbar-nav nav-pills mt-2 mt-lg-0">
                     <li class="nav-item"><a class="nav-link" href="#section-intro">演算法介紹</a></li>
                     <li class="nav-item"><a class="nav-link" href="#section-learning">AI 輔助學習紀錄</a></li>
                     <li class="nav-item"><a class="nav-link" href="#section-check">查證與修正</a></li>
@@ -214,8 +223,6 @@
                     <li class="nav-item"><a class="nav-link" href="#section-reflection">學習反思</a></li>
                 </ul>
             </div>
-
-
         </div>
     </nav>
 
@@ -392,8 +399,10 @@
         const navbar = document.querySelector('.navbar');
         const navLinks = document.querySelectorAll('.navbar .nav-link');
         const brand = document.querySelector('.navbar-brand');
+        const showNavBtn = document.getElementById('showNavBtn');
         const bsCollapse = new bootstrap.Collapse(document.getElementById('mainNav'), { toggle: false });
 
+        // 點擊清單項目時，收起導覽列
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
                 navbar.classList.add('navbar-collapsed');
@@ -401,13 +410,18 @@
             });
         });
 
-        brand.addEventListener('click', event => {
+        // 建立一個函式：用於重新顯示導覽列
+        const expandNav = (event) => {
             if (navbar.classList.contains('navbar-collapsed')) {
-                event.preventDefault();
+                event.preventDefault(); // 防止連結跳轉
                 navbar.classList.remove('navbar-collapsed');
                 bsCollapse.show();
             }
-        });
+        };
+
+        // 綁定點擊事件：點擊標題或「顯示導覽列」按鈕都會展開選單
+        brand.addEventListener('click', expandNav);
+        showNavBtn.addEventListener('click', expandNav);
     </script>
 </body>
 </html>
