@@ -147,6 +147,15 @@
             top: 18px;
             z-index: 1000;
             background-color: #ffffff;
+            transition: transform 0.25s ease;
+        }
+        .navbar-collapsed .navbar-collapse,
+        .navbar-collapsed .navbar-toggler,
+        .navbar-collapsed .d-lg-flex {
+            display: none !important;
+        }
+        .navbar-collapsed .navbar-brand {
+            margin-right: 0;
         }
         .navbar .navbar-brand { font-weight: 800; color: #0f172a; }
         .navbar-nav { gap: 0.6rem; align-items: center; }
@@ -207,7 +216,7 @@
             </div>
 
             <div class="d-none d-lg-flex ms-auto">
-                <a href="#section-reflection" class="btn btn-outline-primary btn-sm">前往反思</a>
+                <a href="#section-reflection" class="btn btn-outline-primary btn-sm js-toggle-nav">前往反思</a>
             </div>
         </div>
     </nav>
@@ -272,7 +281,6 @@
                 </div>
                 <div class="text-muted small ms-3 ps-3 border-start border-warning border-3">
                     <strong>學習體悟：</strong>以「剝洋蔥」比喻理解反向生成：模型每步預測並去除「雜訊」而非直接生成圖像，這使我在閱讀 PyTorch 實作時能立即掌握輸出維度與加入微小隨機擾動的必要性。
-                </div>
                 </div>
             </div>
         </div>
@@ -382,5 +390,26 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const navbar = document.querySelector('.navbar');
+        const navLinks = document.querySelectorAll('.navbar .nav-link');
+        const brand = document.querySelector('.navbar-brand');
+        const bsCollapse = new bootstrap.Collapse(document.getElementById('mainNav'), { toggle: false });
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navbar.classList.add('navbar-collapsed');
+                bsCollapse.hide();
+            });
+        });
+
+        brand.addEventListener('click', event => {
+            if (navbar.classList.contains('navbar-collapsed')) {
+                event.preventDefault();
+                navbar.classList.remove('navbar-collapsed');
+                bsCollapse.show();
+            }
+        });
+    </script>
 </body>
 </html>
